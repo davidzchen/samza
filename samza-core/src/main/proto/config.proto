@@ -1,0 +1,110 @@
+message KafkaCheckpointConfig {
+  extend MessageSet {
+    optional KafkaCheckpointConfig message_set_extension = 1;
+  }
+
+  required string system = 1;
+
+  optional int32 replication_factor = 2 [default=3];
+
+  optional int64 segment_bytes = 3 [default=26214400];
+}
+
+message TaskConfig {
+  required string task = 1;
+
+  repeated string input = 2;
+
+  optional int64 window_ms = 3 [default=-1];
+
+  message CheckpointConfig {
+    required string factory = 1;
+
+    optional MessageSet options = 2;
+  }
+  optional CheckpointConfig checkpoint = 4;
+
+  optional int64 commit_ms = 5 [default=60000];
+
+  optional string command_class = 6
+      [default="org.apache.samza.job.ShellCommandBuilder"];
+
+  optional string opts = 7;
+
+  optional string java_home = 8;
+
+  optional string execute = 9 [default="bin/run-container.sh"];
+
+  optional string chooser_class = 10
+      [default="org.apache.samza.system.chooser.RoundRobinChooserFactory"];
+
+  message ListenerConfig {
+    required string name = 1;
+    required string class = 2;
+  }
+  repeated ListenerConfig listener = 11;
+
+  repeated string enable_listener = 12;
+
+  optional bool drop_deserialization_errors = 13 [default=false];
+
+  optional bool drop_serialization_errors = 14 [default=false];
+
+  optional int64 poll_interval_ms = 15;
+
+  repeated string ignore_exception = 16;
+}
+
+enum OffsetType {
+  NEWEST = 1;
+  OLDEST = 2;
+  UPCOMING = 3;
+}
+
+message SystemConfig {
+  required string name = 1;
+
+  required string factory = 2;
+
+  optional string key_serde = 3;
+
+  optional string msg_serde = 4;
+
+  optional OffsetType offset_default = 4 [default=UPCOMING];
+
+  message SystemStreamConfig {
+    optional string name = 1;
+
+    optional string key_serde = 2;
+
+    optional string msg_serde = 3;
+
+    optional OffsetType offset_default = 4 [default=UPCOMING];
+
+    optional bool reset_offset = 5 [default=false];
+
+    optional int32 priority = 6 [default=-1];
+
+    optional bool bootstrap = 7 [default=false];
+  }
+  repeated SystemStreamConfig streams = 4;
+}
+
+message JobConfig {
+  required string name = 1;
+
+  required string factory_class = 2;
+
+  optional int32 id = 3 [default=1];
+
+  message RewriterConfig {
+    required string name = 1;
+    required string class = 2;
+  }
+  repeated RewriterConfig rewriter = 4;
+
+  repeated string apply_rewriter = 5;
+
+  optional string systemstreampartition_grouper_factory = 6
+      [default="org.apache.samza.container.grouper.stream.GroupByPartitionFactory"];
+}
