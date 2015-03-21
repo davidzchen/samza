@@ -1,0 +1,28 @@
+message RocksDBStoreConfig {
+  extend MessageSet {
+    optional RocksDBStoreConfig message_set_extension = 5;
+  }
+
+  optional int64 write_batch_size = 1 [default=500];
+  optional int64 object_cache_size = 2 [default=1000];
+  optional int64 container_cache_size_bytes = 3 [default=104857600];
+  optional int64 container_write_buffer_size_bytes = 4 [default=33554432];
+  enum Compression {
+    SNAPPY = 1;
+    BZIP2 = 2;
+    ZLIB = 3;
+    LZ4 = 4;
+    LZ4HC = 5;
+    NONE = 6;
+  }
+  optional Compression compression = 5 [default=SNAPPY];
+  optional int64 block_size_bytes = 6 [default=4096];
+  optional int64 bloomfilter_bits = 7 [default=10];
+  enum CompactionStyle {
+    UNIVERSAL = 1;
+    FIFO = 2;
+    LEVEL = 3;
+  }
+  optional CompactionStyle = 8 [default=UNIVERSAL];
+  optional num_write_buffers = 9 [default=3];
+}

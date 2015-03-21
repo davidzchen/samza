@@ -1,0 +1,23 @@
+message YarnJobConfig {
+  extend MessageSet {
+    optional YarnJobConfig message_set_extension = 6;
+  }
+
+  required string package_path = 1;
+
+  message ContainerConfig {
+    optional int32 count = 1 [default = 1];
+    optional int64 memory_mb = 2 [default = 1024];
+    optional int64 cpu_cores = 3 [default = 1];
+    optional int32 retry_count = 4 [default = 8];
+    optional int32 retry_window_ms = 5 [default = 300000];
+  }
+  required ContainerConfig container = 2;
+
+  message AmConfig {
+    optional int64 memory_mb = 1 [default = 1024];
+    repeated string opt = 2;
+    optional string java_home = 3;
+    optional int64 poll_interval_ms = 4 [default = 1000];
+    optional bool jmx_enabled = 5 [default = true];
+}

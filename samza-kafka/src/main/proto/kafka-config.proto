@@ -1,0 +1,59 @@
+message KafkaCheckpointConfig {
+  extend MessageSet {
+    optional KafkaCheckpointConfig message_set_extension = 1;
+  }
+
+  required string system = 1;
+  optional int32 replication_factor = 2 [default = 3];
+  optional int64 segment_bytes = 3 [default = 26214400];
+}
+
+message KafkaSystemConfig {
+  extend MessageSet {
+    optional KafkaSystemConfig message_set_extension = 2;
+  }
+
+  message ConsumerConfig {
+    repeated string zookeeper_connect = 1;
+
+    enum AutoOffsetReset {
+      SMALLEST = 1;
+      LARGEST = 2;
+    }
+    optional auto_offset_reset = 2 [default = LARGEST];
+
+    repeated string kafka_config = 3;
+  }
+
+  message ProducerConfig {
+    repeated string metadata_broker_list = 1;
+
+    enum ProducerType {
+      SYNC = 1;
+      ASYNC = 2;
+    }
+    optional ProducerType producer_type = 2;
+
+    repeated string kafka_config = 3;
+  }
+
+  optional int32 fetch_threshold = 4 [default = 50000];
+}
+
+message KafkaRewriterConfig {
+  extend MessageSet {
+    optional KafkaRewriterConfig message_set_extension = 3;
+  }
+
+  required string system = 1;
+  required string regex = 2;
+  repeated string config = 3;
+}
+
+message KafkaSerdeConfig {
+  extend MessageSet {
+    optional KafkaSerdeConfig message_set_extension = 4;
+  }
+  required string encoder = 1;
+  required string decoder = 2;
+}
